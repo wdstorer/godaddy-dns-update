@@ -1,5 +1,5 @@
 domain: ""   # your domain
-name: ""     # name of A record to update
-ttp:         # ttl of A record
+name: "@"    # name of A record to update
+ttl: 3600    # ttl of A record
 key: ""      # key for godaddy developer API
 secret: ""   # secret for godaddy developer API

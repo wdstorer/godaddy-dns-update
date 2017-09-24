@@ -1,7 +1,6 @@
 #!/usr/bin/python
 import yaml
 import io
-import urllib2
 import requests
 import json
 
@@ -11,8 +10,6 @@ def read_config():
   return data_loaded
 
 def get_publicIP():
-  #ext_ip = urllib2.urlopen('https://api.ipifyx.org').read()
-  
   try:
     result = requests.get('https://api.ipify.org', timeout=5).text
   except requests.exceptions.RequestException as e:
