@@ -35,7 +35,7 @@ def set_dnsIP(dnsIP, publicIP, key, secret, domain, name, ttl):
   headers = {'Content-Type':'application/json', 'Authorization':authHeader }
   records = [] 
   records.append({'data':publicIP, 'ttl':ttl})
-  print "updating A record from %s to %s" %(dnsIP, publicIP)
+  print "updating A record from %s to %s for %s" %(dnsIP, publicIP, domain)
   url = "https://api.godaddy.com/v1/domains/%s/records/A/%s" %(domain,name)
   try:
     result = requests.put(url, headers=headers, json=records, timeout=5).text
@@ -48,9 +48,9 @@ def set_dnsIP(dnsIP, publicIP, key, secret, domain, name, ttl):
 configData = read_config()
 publicIP = get_publicIP()
 
-dnsIP = get_dnsIP(configData["key"], configData["secret"], configData["domain"], configData["name"])
-
-if publicIP != dnsIP:
-  print set_dnsIP(dnsIP, publicIP, configData["key"], configData["secret"], configData["domain"], configData["name"], configData["ttl"])
-else:
-  print "IPs match. Nothing updated."
+for domain in configData["domain"]:
+  dnsIP = get_dnsIP(configData["key"], configData["secret"], domain, configData["name"])
+  if publicIP != dnsIP:
+    print set_dnsIP(dnsIP, publicIP, configData["key"], configData["secret"], domain, configData["name"], configData["ttl"])
+  else:
+    print "IPs match. Nothing updated for %s." %(domain)
