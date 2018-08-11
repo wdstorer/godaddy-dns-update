@@ -22,7 +22,6 @@ def get_dnsIP(key, secret, domain, name):
   authHeader = "sso-key %s:%s" %(key, secret)
   headers = {'Authorization':authHeader}
   url = "https://api.godaddy.com/v1/domains/%s/records/A/%s" %(domain,name)
-  
   try:
     result = json.loads(requests.get(url, headers=headers, timeout=5).text)
   except requests.exceptions.RequestException as e:
@@ -34,11 +33,12 @@ def get_dnsIP(key, secret, domain, name):
 def set_dnsIP(dnsIP, publicIP, key, secret, domain, name, ttl):
   authHeader = "sso-key %s:%s" %(key, secret)
   headers = {'Content-Type':'application/json', 'Authorization':authHeader }
-  payload = json.dumps({'data':publicIP, 'ttl':ttl})
+  records = [] 
+  records.append({'data':publicIP, 'ttl':ttl})
   print "updating A record from %s to %s" %(dnsIP, publicIP)
   url = "https://api.godaddy.com/v1/domains/%s/records/A/%s" %(domain,name)
   try:
-    result = requests.put(url, headers=headers, data=payload, timeout=5).text
+    result = requests.put(url, headers=headers, json=records, timeout=5).text
   except requests.exceptions.RequestException as e:
     print e
     exit(1)
